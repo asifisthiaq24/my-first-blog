@@ -2,13 +2,13 @@
 
 {% block content %}
 {% for post in posts %}
-<div class="post">
-    <div class="date">
+<div class="post" style="border: 2px solid #5eb091;">
+    <div class="date" style="padding-top: 10px;padding-left: 10px;">
         {{ post.published_date }}
     </div>
-    <h1><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h1>
-    <p>{{ post.text|linebreaksbr }}</p>
-    <a style="color:grey" href="{% url 'post_detail' pk=post.pk %}">Comments: {{ post.approved_comments.count }}</a>
+    <h1 style="padding-left: 10px;"><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h1>
+    <p style="padding-left: 10px;">{{ post.text|linebreaksbr }}</p>
+    <a style="padding-bottom: 10px;padding-left: 10px;color:grey" href="{% url 'post_detail' pk=post.pk %}">Comments: {{ post.approved_comments.count }}</a>
 </div>
 {% endfor %}
 {% endblock content %}
