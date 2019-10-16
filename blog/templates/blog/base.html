@@ -7,9 +7,22 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
     <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="{% static 'css/blog.css' %}">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
+    <script>
+        var app = angular.module('app', []);
+        app.config(function ($interpolateProvider) {
+            $interpolateProvider.startSymbol('[[');
+            $interpolateProvider.endSymbol(']]');
+        });
+        app.controller("mainController", function ($scope) {
+            $scope.msg2 = "Asif Isthiaq AJS"
+        });
+    </script>
 </head>
 
-<body>
+<body ng-app="app" ng-controller="mainController" class="ng-scope">
     <div class="page-header">
         {% if user.is_authenticated %}
         <a href="{% url 'post_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
@@ -18,8 +31,9 @@
         {% else %}
         <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
         {% endif %}
-        <h1><a href="/">Asif Isthiaq</a></h1>
+        <h1><a href="/">[[msg2]]</a></h1>
     </div>
+    <h1>{{msg2}}</h1>
     <div class="content container">
         <div class="row">
             <div class="col-md-8">
@@ -28,6 +42,7 @@
             </div>
         </div>
     </div>
+
 </body>
 
 </html>
