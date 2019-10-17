@@ -3,8 +3,20 @@
 
 <head>
     <title>Asif's Blog</title>
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <!-- <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"> -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+        integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
     <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="{% static 'css/blog.css' %}">
 
@@ -27,7 +39,26 @@
 </head>
 
 <body ng-app="app" ng-controller="mainController" style="padding-left: 0px;">
-    <div class="page-header">
+    <ul>
+        <li><a class="active" href="/"><strong>[[vms.model.msg]]</strong></a></li>
+        <!-- <li><a href="#news">News</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#about">About</a></li> -->
+        {% if user.is_authenticated %}
+        <li style="float:right"><a href="{% url 'logout' %}">Log out</a> </li>
+        <li style="float:right"><a href="{% url 'post_new' %}"><span class="glyphicon glyphicon-plus"></span></a></li>
+        <li style="float:right"><a href="{% url 'post_draft_list' %}"><span class="glyphicon glyphicon-edit"></span></a>
+        </li>
+        <li style="float:right">
+            <a>Hello {{ user.username }}</a>
+        </li>
+
+        {% else %}
+        <li style="float:right"><a href="{% url 'login' %}">Log In</a></li>
+        {% endif %}
+        <!-- <li style="float:right"><a href="#about">Log In</a></li> -->
+    </ul>
+    <!-- <div class="page-header">
         {% if user.is_authenticated %}
         <a href="{% url 'post_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
         <a href="{% url 'post_draft_list' %}" class="top-menu"><span class="glyphicon glyphicon-edit"></span></a>
@@ -36,8 +67,8 @@
         <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
         {% endif %}
         <h1><a href="/">[[vms.model.msg]]</a></h1>
-    </div>
-    <div class="content container">
+    </div> -->
+    <div class="content container" style="margin-top: 15px">
         <div class="row">
             <div class="col-md-12">
                 {% block content %}
@@ -50,3 +81,29 @@
 </body>
 
 </html>
+
+<style>
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #333;
+    }
+
+    li {
+        float: left;
+    }
+
+    li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+
+    li a:hover {
+        background-color: #111;
+    }
+</style>

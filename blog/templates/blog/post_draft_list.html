@@ -2,9 +2,9 @@
 
 {% block content %}
     {% for post in posts %}
-        <div class="post" style="border: 2px solid #5eb091;">
+        <div class="post" style="border: 2px solid #333;">
             <p class="date" style="padding: 10px;">created: {{ post.created_date|date:'d-m-Y' }}</p>
-            <h1 style="padding: 10px;"><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h1>
+            <h1 style="padding: 10px;color: #333" ><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h1>
             <p style="padding: 10px;">{{ post.text|truncatechars:200 }}</p>
         </div>
     {% endfor %}
