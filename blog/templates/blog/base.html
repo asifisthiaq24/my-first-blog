@@ -3,6 +3,7 @@
 
 <head>
     <title>Asif's Blog</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <!-- <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"> -->
     <!-- Latest compiled and minified CSS -->
@@ -17,33 +18,73 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
         integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
+
     <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="{% static 'css/blog.css' %}">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
-
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ng-table/1.0.0/ng-table.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ng-table/1.0.0/ng-table.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.35.3/js/bootstrap-dialog.min.js"></script>
     <script>
-        var app = angular.module('app', []);
+        var app = angular.module('app', ["ngTable"]);
         app.config(function ($interpolateProvider) {
             $interpolateProvider.startSymbol('[[');
             $interpolateProvider.endSymbol(']]');
         });
-        app.controller("mainController", function ($scope) {
+        app.controller("mainController", function ($scope, NgTableParams) {
             $scope.vms = this;
             var vms = this;
             vms.model = {};
             $scope.msg2 = "Asif Isthiaq AJS"
             vms.model.msg = 'Isthiaq Asif'
+            var data = [{ name: "Moroni", age: 50 },
+            { name: "Tiancum", age: 43 },
+            { name: "Jacob", age: 27 },
+            { name: "Nephi", age: 29 },
+            { name: "Enos", age: 34 },
+            { name: "Tiancum", age: 43 },
+            { name: "Jacob", age: 27 },
+            { name: "Nephi", age: 29 },
+            { name: "Enos", age: 34 },
+            { name: "Tiancum", age: 43 },
+            { name: "Jacob", age: 27 },
+            { name: "Nephi", age: 29 },
+            { name: "Enos", age: 34 },
+            { name: "Tiancum", age: 43 },
+            { name: "Jacob", age: 27 },
+            { name: "Nephi", age: 29 },
+            { name: "Enos", age: 34 }];
+
+
+            vms.model.tableParams = new NgTableParams({}, { dataset: data });
         });
+        function showConfirmation_dialog(t) {
+        BootstrapDialog.show({
+            title: t,
+            message: $('<div><center><strong><h1>You must log in to continue</h1></strong></center></div>'),
+            type: BootstrapDialog.TYPE_SUCCESS,
+            buttons: [{
+                label: 'Log In',
+                cssClass: 'btn-success',
+                action: function (dialogItself) {
+                    //func();
+                    dialogItself.close();
+                }
+            }, {
+                label: 'Close',
+                action: function (dialogItself) {
+                    dialogItself.close();
+                }
+            }]
+        });
+    }
     </script>
 </head>
 
 <body ng-app="app" ng-controller="mainController" style="padding-left: 0px;">
     <ul>
         <li><a class="active" href="/"><strong>[[vms.model.msg]]</strong></a></li>
-        <!-- <li><a href="#news">News</a></li>
-        <li><a href="#contact">Contact</a></li>
-        <li><a href="#about">About</a></li> -->
         {% if user.is_authenticated %}
         <li style="float:right"><a href="{% url 'logout' %}">Log out</a> </li>
         <li style="float:right"><a href="{% url 'post_new' %}"><span class="glyphicon glyphicon-plus"></span></a></li>
@@ -52,22 +93,10 @@
         <li style="float:right">
             <a>Hello {{ user.username }}</a>
         </li>
-
         {% else %}
         <li style="float:right"><a href="{% url 'login' %}">Log In</a></li>
         {% endif %}
-        <!-- <li style="float:right"><a href="#about">Log In</a></li> -->
     </ul>
-    <!-- <div class="page-header">
-        {% if user.is_authenticated %}
-        <a href="{% url 'post_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
-        <a href="{% url 'post_draft_list' %}" class="top-menu"><span class="glyphicon glyphicon-edit"></span></a>
-        <p class="top-menu">Hello {{ user.username }} <small>(<a href="{% url 'logout' %}">Log out</a>)</small></p>
-        {% else %}
-        <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
-        {% endif %}
-        <h1><a href="/">[[vms.model.msg]]</a></h1>
-    </div> -->
     <div class="content container" style="margin-top: 15px">
         <div class="row">
             <div class="col-md-12">
@@ -75,6 +104,14 @@
                 {% endblock %}
             </div>
         </div>
+        <!-- <table ng-table="vms.model.tableParams" class="table" show-filter="true">
+            <tr ng-repeat="user in $data">
+                <td title="'Name'">
+                    [[user.name]]</td>
+                <td title="'Age'">
+                    [[user.age]]</td>
+            </tr>
+        </table> -->
 
     </div>
 
@@ -105,5 +142,140 @@
 
     li a:hover {
         background-color: #111;
+    }
+</style>
+<style>
+    .bootstrap-dialog .modal-header {
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px
+    }
+
+    .bootstrap-dialog .bootstrap-dialog-title {
+        color: #fff;
+        display: inline-block;
+        font-size: 16px
+    }
+
+    .bootstrap-dialog .bootstrap-dialog-message {
+        font-size: 14px
+    }
+
+    .bootstrap-dialog .bootstrap-dialog-button-icon {
+        margin-right: 3px
+    }
+
+    .bootstrap-dialog .bootstrap-dialog-close-button {
+        font-size: 20px;
+        float: right;
+        opacity: .9;
+        filter: alpha(opacity=90)
+    }
+
+    .bootstrap-dialog .bootstrap-dialog-close-button:hover {
+        cursor: pointer;
+        opacity: 1;
+        filter: alpha(opacity=100)
+    }
+
+    .bootstrap-dialog.type-default .modal-header {
+        background-color: #fff
+    }
+
+    .bootstrap-dialog.type-default .bootstrap-dialog-title {
+        color: #333
+    }
+
+    .bootstrap-dialog.type-info .modal-header {
+        background-color: #5bc0de
+    }
+
+    .bootstrap-dialog.type-primary .modal-header {
+        background-color: #337ab7
+    }
+
+    .bootstrap-dialog.type-success .modal-header {
+        background-color: #333
+    }
+
+    .bootstrap-dialog.type-warning .modal-header {
+        background-color: #f0ad4e
+    }
+
+    .bootstrap-dialog.type-danger .modal-header {
+        background-color: #d9534f
+    }
+
+    .bootstrap-dialog.type-pink .modal-header {
+        background-color: #eee
+    }
+
+    .bootstrap-dialog.size-large .bootstrap-dialog-title {
+        font-size: 24px
+    }
+
+    .bootstrap-dialog.size-large .bootstrap-dialog-close-button {
+        font-size: 30px
+    }
+
+    .bootstrap-dialog.size-large .bootstrap-dialog-message {
+        font-size: 18px
+    }
+
+    .bootstrap-dialog .icon-spin {
+        display: inline-block;
+        -moz-animation: spin 2s infinite linear;
+        -o-animation: spin 2s infinite linear;
+        -webkit-animation: spin 2s infinite linear;
+        animation: spin 2s infinite linear
+    }
+
+    @-moz-keyframes spin {
+        0% {
+            -moz-transform: rotate(0deg)
+        }
+
+        100% {
+            -moz-transform: rotate(359deg)
+        }
+    }
+
+    @-webkit-keyframes spin {
+        0% {
+            -webkit-transform: rotate(0deg)
+        }
+
+        100% {
+            -webkit-transform: rotate(359deg)
+        }
+    }
+
+    @-o-keyframes spin {
+        0% {
+            -o-transform: rotate(0deg)
+        }
+
+        100% {
+            -o-transform: rotate(359deg)
+        }
+    }
+
+    @-ms-keyframes spin {
+        0% {
+            -ms-transform: rotate(0deg)
+        }
+
+        100% {
+            -ms-transform: rotate(359deg)
+        }
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg)
+        }
+
+        100% {
+            transform: rotate(359deg)
+        }
     }
 </style>
