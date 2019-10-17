@@ -60,25 +60,25 @@
             vms.model.tableParams = new NgTableParams({}, { dataset: data });
         });
         function showConfirmation_dialog(t) {
-        BootstrapDialog.show({
-            title: t,
-            message: $('<div><center><strong><h1>You must log in to continue</h1></strong></center></div>'),
-            type: BootstrapDialog.TYPE_SUCCESS,
-            buttons: [{
-                label: 'Log In',
-                cssClass: 'btn-success',
-                action: function (dialogItself) {
-                    //func();
-                    dialogItself.close();
-                }
-            }, {
-                label: 'Close',
-                action: function (dialogItself) {
-                    dialogItself.close();
-                }
-            }]
-        });
-    }
+            BootstrapDialog.show({
+                title: t,
+                message: $('<div><center><strong><h1>You must log in to continue</h1></strong></center></div>'),
+                type: BootstrapDialog.TYPE_SUCCESS,
+                buttons: [{
+                    label: 'Log In',
+                    cssClass: 'btn-success',
+                    action: function (dialogItself) {
+                        location.replace("http://127.0.0.1:8000/accounts/login/")
+                        dialogItself.close();
+                    }
+                }, {
+                    label: 'Close',
+                    action: function (dialogItself) {
+                        dialogItself.close();
+                    }
+                }]
+            });
+        }
     </script>
 </head>
 
