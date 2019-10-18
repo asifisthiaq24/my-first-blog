@@ -4,52 +4,52 @@ from django.utils import timezone
 from .forms import PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
 
-import sqlite3
-from sqlite3 import Error
+# import sqlite3
+# from sqlite3 import Error
  
  
-def create_connection(db_file):
-    """ create a database connection to the SQLite database
-        specified by the db_file
-    :param db_file: database file
-    :return: Connection object or None
-    """
-    conn = None
-    try:
-        conn = sqlite3.connect(db_file)
-    except Error as e:
-        print(e)
+# def create_connection(db_file):
+#     """ create a database connection to the SQLite database
+#         specified by the db_file
+#     :param db_file: database file
+#     :return: Connection object or None
+#     """
+#     conn = None
+#     try:
+#         conn = sqlite3.connect(db_file)
+#     except Error as e:
+#         #print(e)
  
-    return conn
+#     return conn
  
  
-def select_all_tasks(conn):
-    """
-    Query all rows in the tasks table
-    :param conn: the Connection object
-    :return:
-    """
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM auth_user")
-    rows = cur.fetchall()
-    # for row in rows:
-    #     print(row)
-    return list(rows)
+# def select_all_tasks(conn):
+#     """
+#     Query all rows in the tasks table
+#     :param conn: the Connection object
+#     :return:
+#     """
+#     cur = conn.cursor()
+#     cur.execute("SELECT * FROM auth_user")
+#     rows = cur.fetchall()
+#     # for row in rows:
+#     #     print(row)
+#     return list(rows)
 
-def main1():
-    database = "./db.sqlite3"
-    # create a database connection
-    conn = create_connection(database)
-    with conn: 
+# def main1():
+#     database = "./db.sqlite3"
+#     # create a database connection
+#     conn = create_connection(database)
+#     with conn: 
         
-        x = select_all_tasks(conn)
-        x = list(x[0])
+#         x = select_all_tasks(conn)
+#         x = list(x[0])
     
-    print "------Query all tasks"
-    print x[10]
+#     #print "------Query all tasks"
+#     #print x[10]
 # Create your views here.
 def home(request):
-    main1()
+    #main1()
     return render(request, 'blog/home.html', {})
 
 def post_list(request):
