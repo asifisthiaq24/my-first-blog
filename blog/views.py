@@ -4,6 +4,22 @@ from django.utils import timezone
 from .forms import PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
 
+import sqlite3
+
+def db_operation():
+    conn = sqlite3.connect('./db.sqlite3')
+    print "Opened database successfully"
+    cursor = conn.execute("SELECT * from auth_user")
+    print cursor
+    for row in cursor:
+        print row[0]
+        print row[1]
+        print row[2]
+        print row[10]
+    print "Operation done successfully"
+    conn.close()
+
+
 # import sqlite3
 # from sqlite3 import Error
  
@@ -50,6 +66,7 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 def home(request):
     #main1()
+    db_operation()
     return render(request, 'blog/home.html', {})
 
 def post_list(request):
