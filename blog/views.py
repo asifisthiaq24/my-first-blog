@@ -41,11 +41,8 @@ def main1():
     # create a database connection
     conn = create_connection(database)
     with conn: 
-        
         x = select_all_tasks(conn)
         x = list(x[0])
-    
-    print "------Query all tasks"
     print x[10]
 # Create your views here.
 def home(request):
