@@ -5,49 +5,28 @@ from .forms import PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
 
 import sqlite3
-from sqlite3 import Error
- 
- 
-def create_connection(db_file):
-    """ create a database connection to the SQLite database
-        specified by the db_file
-    :param db_file: database file
-    :return: Connection object or None
-    """
-    conn = None
-    try:
-        conn = sqlite3.connect(db_file)
-    except Error as e:
-        print(e)
- 
-    return conn
- 
- 
-def select_all_tasks(conn):
-    """
-    Query all rows in the tasks table
-    :param conn: the Connection object
-    :return:
-    """
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM auth_user")
-    rows = cur.fetchall()
-    # for row in rows:
-    #     print(row)
-    return list(rows)
 
-def main1():
-    database = "./db.sqlite3"
-    # create a database connection
-    conn = create_connection(database)
-    with conn: 
-        x = select_all_tasks(conn)
-        x = list(x[0])
-    print x[10]
+def db_operation():
+    conn = sqlite3.connect('./db.sqlite3')
+    print "Opened database successfully"
+    cursor = conn.execute("SELECT * from auth_user")
+    print cursor
+    for row in cursor:
+        print row[0]
+        print row[1]
+        print row[2]
+        print row[10]
+    print "Operation done successfully"
+    conn.close()
+
+
 # Create your views here.
 def home(request):
-    main1()
+    db_operation()
     return render(request, 'blog/home.html', {})
+@login_required
+def fifa_home(request):
+    return render(request, 'blog/fifa_main.html', {})
 
 def post_list(request):
     posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
