@@ -180,6 +180,17 @@ def getDF():
 def test(request):
     bytes = getDF().encode('utf-8')
     return HttpResponse(bytes, content_type='application/json')
+
+'''
+$.ajax({
+    url: '/test/',
+    dataType: 'html',
+    success: function (response) {
+        $('#testDiv').html(response);
+            $('#T_my_id').DataTable()
+        }
+});
+'''
 ########################################################################################
 
 
