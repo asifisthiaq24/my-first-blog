@@ -82,6 +82,30 @@ def highlight_cols(val):
     else:
         color = 'green'
     return 'background-color: %s' % color
+def highlight_cols2(val):
+    #copy df to new - original data are not changed
+    df = val.copy()
+    #select all values to default value - red color
+    df.loc[:,:] = 'background-color: #eee'
+    #overwrite values grey color
+    print val.loc[:,'Sales Channel']
+    index=0
+    for v in val.loc[:,'Sales Channel']:
+        if v=='Offline':
+            df.loc[index,'Sales Channel'] = 'background-color: red'
+        else:
+            df.loc[index,'Sales Channel'] = 'background-color: green'
+        index = index+1
+    index=0
+    for v in val.loc[:,'Order Date']:
+        df.loc[index,'Order Date'] = 'text-align: center'
+        index = index+1
+    index=0
+    for v in val.loc[:,'Units Sold']:
+        df.loc[index,'Units Sold'] = 'text-align: right'
+        index = index+1
+
+    return df    
 def getDF():
     df = pd.read_csv('1k.csv')
     style_json = {
@@ -92,11 +116,13 @@ def getDF():
             'align':'center'
         } 
     }
-    df = df[['Region', 'Country', 'Item Type','Sales Channel','Order Date','Units Sold']]
+    df = df[['Region', 'Country', 'Item Type','Sales Channel','Order Date','Units Sold']].head(100)
     #s = df.style.applymap(color_negative_red) #pip install Jinja2
     
     # x1 = df.style.set_table_attributes('class="table table-bordered table-hover"')
-    x = df.style.applymap(highlight_cols, subset=pd.IndexSlice[:, ['Sales Channel']]).set_properties(**{'font-size': '15px', 'font-family': 'Calibri'}).set_table_attributes('class="table"')
+    #x = df.style.applymap(highlight_cols, subset=pd.IndexSlice[:, ['Sales Channel']]).set_properties(**{'font-size': '15px', 'font-family': 'Calibri'}).set_table_attributes('class="table table-bordered table-hover"')
+    x=df.style.apply(highlight_cols2, axis=None)
+    x = x.set_table_attributes('class="table table-bordered table-hover"')
     #x = df.style.set_table_attributes('class="table"')
     print 'fdsfsdfsd----'
     #print x.render(uuid='my_id',uuclass='table')
