@@ -82,60 +82,123 @@ def highlight_cols(val):
     else:
         color = 'green'
     return 'background-color: %s' % color
-def highlight_cols2(val):
-    #copy df to new - original data are not changed
+def apply_styles_to_dataframe_test(val,all_cols,style_json):
+    #copy df to new - original data are not changed\
+    #print style_json
     df = val.copy()
-    #select all values to default value - red color
+    #df = val
+    #select all values to default value - #eee color
     df.loc[:,:] = 'background-color: #eee'
     #overwrite values grey color
-    print val.loc[:,'Sales Channel']
-    index=0
-    for v in val.loc[:,'Sales Channel']:
-        if v=='Offline':
-            df.loc[index,'Sales Channel'] = 'background-color: red'
-        else:
-            df.loc[index,'Sales Channel'] = 'background-color: green'
-        index = index+1
-    index=0
-    for v in val.loc[:,'Order Date']:
-        df.loc[index,'Order Date'] = 'text-align: center'
-        index = index+1
-    index=0
-    for v in val.loc[:,'Units Sold']:
-        df.loc[index,'Units Sold'] = 'text-align: right'
-        index = index+1
+    #index=0
+    # for v in val.loc[:,'Sales Channel']:
+    #     if v=='Offline':
+    #         df.loc[index,'Sales Channel'] = 'background-color: red'
+    #     else:
+    #         df.loc[index,'Sales Channel'] = 'background-color: green'
+    #     index = index+1
+    # index=0
+    # for v in val.loc[:,'Order Date']:
+    #     df.loc[index,'Order Date'] = 'text-align: center;color:blue'
+    #     index = index+1
+    # index=0
+    # for v in val.loc[:,'Units Sold']:
+    #     df.loc[index,'Units Sold'] = 'text-align: right'
+    #     index = index+1
+    # print style_json['Units Sold']
+    for key in style_json:
+        index=0
+        for v in val.loc[:,'Units Sold']:
+            df.loc[index,key] = style_json[key]
+            index = index+1
 
-    return df    
-def getDF():
+    return df   
+def getDF_test():
     df = pd.read_csv('1k.csv')
     style_json = {
-        'Units Sold':{
-            'align':'right'
-        },
-        'Order Date':{
-            'align':'center'
-        } 
+        "Units Sold":'text-align:right;color:red;background-color:#eee;',
+        "Order Date":'text-align:center',
+        "Other":{
+            "Offline":'background-color:red',
+            "online":'background-color:green'
+        }
     }
+    #all_cols = ['Region', 'Country', 'Item Type','Sales Channel','Order Date','Units Sold']
     df = df[['Region', 'Country', 'Item Type','Sales Channel','Order Date','Units Sold']].head(100)
+    all_cols = list(df.columns)
     #s = df.style.applymap(color_negative_red) #pip install Jinja2
     
     # x1 = df.style.set_table_attributes('class="table table-bordered table-hover"')
     #x = df.style.applymap(highlight_cols, subset=pd.IndexSlice[:, ['Sales Channel']]).set_properties(**{'font-size': '15px', 'font-family': 'Calibri'}).set_table_attributes('class="table table-bordered table-hover"')
-    x=df.style.apply(highlight_cols2, axis=None)
+    x=df.style.apply(lambda x:apply_styles_to_dataframe(x,all_cols,style_json), axis=None)
     x = x.set_table_attributes('class="table table-bordered table-hover"')
     #x = df.style.set_table_attributes('class="table"')
     print 'fdsfsdfsd----'
     #print x.render(uuid='my_id',uuclass='table')
     df_html = df.to_html(index=False,classes = 'table table-bordered table-hover" id = "my_id')
     return x.hide_index().render(uuid='my_id')
-def home(request):
-    # db_operation()
-    return render(request, 'blog/home.html', {})
+
+
+
+
+
+##########################################################################
+def apply_styles_to_dataframe(val,style_json):
+    df = val.copy()
+    df.loc[:,:] = 'background-color: #eee'
+    for key in style_json:
+        if key != 'Others':
+            index=0
+            for v in val.loc[:,key]:
+                df.loc[index,key] = style_json[key]
+                index = index+1
+        elif key == 'Others':
+            for col_name in val.loc[:,:]:
+                index=0
+                for v in val.loc[:,col_name]:
+                    for inner_key in style_json[key]:
+                        if inner_key == v:
+                            df.loc[index,col_name] = style_json[key][inner_key]
+                            index = index+1
+    return df    
+
+def getDF():
+    df = pd.read_csv('1k.csv')
+    style_json = {
+        "Units Sold":'text-align:right;color:white;background-color:black;',
+        "Order Date":'text-align:center;color:white;background-color:purple;',
+        "Others":{
+            "Offline":'background-color:red;color:#000',
+            "Online":'background-color:green;color:#000'
+        }
+    }
+    df = df[['Region', 'Country', 'Item Type','Sales Channel','Order Date','Units Sold']].head(100)
+    x=df.style.apply(lambda x:apply_styles_to_dataframe(x,style_json), axis=None)
+    x = x.set_table_attributes('class="table table-bordered table-hover"')
+    return x.hide_index().render(uuid='my_id')
 
 def test(request):
     bytes = getDF().encode('utf-8')
     return HttpResponse(bytes, content_type='application/json')
+########################################################################################
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def home(request):
+    # db_operation()
+    return render(request, 'blog/home.html', {})
 @login_required
 def fifa_home(request):
     #panda_testing()
