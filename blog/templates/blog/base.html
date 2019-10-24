@@ -68,7 +68,7 @@
                     label: 'Log In',
                     cssClass: 'btn-success',
                     action: function (dialogItself) {
-                         //location.replace("http://127.0.0.1:8000/accounts/login/")
+                        //location.replace("http://127.0.0.1:8000/accounts/login/")
                         location.replace("http://isthiaq.pythonanywhere.com/accounts/login/")
                         dialogItself.close();
                     }
@@ -83,7 +83,7 @@
     </script>
 </head>
 
-<body ng-app="app" ng-controller="mainController" style="padding-left: 0px;padding-right:0px;padding-top:0px;">
+<body ng-app="app" ng-controller="mainController" style="padding-left: 0px;padding-right:0px;padding-top:0px;background-color: #fff">
     <ul>
         <li><a class="active" href="/"><strong>[[vms.model.msg]]</strong></a></li>
         {% if user.is_authenticated %}
@@ -121,6 +121,10 @@
 </html>
 
 <style>
+    /* body {
+        background-image: url("https://wallpapercave.com/wp/tekM38P.jpg");
+    } */
+
     ul {
         list-style-type: none;
         margin: 0;
