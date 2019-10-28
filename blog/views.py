@@ -4,163 +4,37 @@ from django.utils import timezone
 from .forms import PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
 from django.http import (HttpResponseRedirect, HttpResponse)
+from django.views.decorators.csrf import csrf_exempt
 
-#import sqlite3
-
-# def db_operation():
-#     conn = sqlite3.connect('./db.sqlite3')
-#     # print "Opened database successfully"
-#     cursor = conn.execute("SELECT * from auth_user")
-#     # print cursor
-#     # for row in cursor:
-#     #     print row[0]
-#     #     print row[1]
-#     #     print row[2]
-#     #     print row[10]
-#     # print "Operation done successfully"
-#     conn.close()
-
-
-# Create your views here.
 import numpy as np
 import pandas as pd
 import json
+import sqlite3
 
-def panda_testing():
-    df = pd.DataFrame({'A': 1.,
-                       'B': [211,211,1111,2],
-                       'C': pd.Series(1, index=list(range(4)), dtype='float32'),
-                       'D': np.array([3] * 4, dtype='int32'),
-                       'E': pd.Categorical(["test", "train", "test", "train"]),
-                       'F': 'foo'})
-    print 'printing data frame'
-    print df
-
-    ##
-    df_json_split = df.to_json(orient='split')
-    print df_json_split
-    df_json_records = df.to_json(orient='records')
-    print '\n\n\n\n'
-    print df_json_records
-    print 'sss'
-
-    formatted_obj = json.dumps(df_json_split, indent=4, separators=(',', ': '))
-    print(formatted_obj)
-
-    data_top = df.head(1) 
-    print '\n\n'
-    print data_top
-    print list(df.columns)
-    print df.get(list(df.columns))
-    for col in df.columns: 
-        print col
-
-    df2 = pd.read_csv('1k.csv')
-    df2 = df2[['Region', 'Country', 'Item Type','Sales Channel','Order Date','Units Sold']]
-    df_html = df2.to_html(index=False,classes = 'table table-bordered table-hover" id = "my_id')
-    # print '\n----new-----'
-    # print df_html
-    # print '\n----end---'
-    return df_html
-
-
-# '{"columns": ["col 1", "col 2"],
-#   "index": ["row 1", "row 2"],
-#   "data": [["a", "b"], ["c", "d"]]}'
-##
-def color_negative_red(val):
+def color_negative_red(value):
     """
-    Takes a scalar and returns a string with
-    the css property `'color: red'` for negative
-    strings, black otherwise.
+    Colors elements in a dateframe
+    green if positive and red if
+    negative. Does not color NaN
+    values.
     """
-    color = 'red' if val =='Offline' else 'green'
-    return 'color: %s' % color
-def highlight_cols(val):
-    if val=='Offline':
-        color='red'
-    else:
+    color=''
+    if value == 'Asia':
+        color = 'red'
+    elif value =='Europe':
         color = 'green'
-    return 'background-color: %s' % color
-def apply_styles_to_dataframe_test(val,all_cols,style_json):
-    #copy df to new - original data are not changed\
-    #print style_json
-    df = val.copy()
-    #df = val
-    #select all values to default value - #eee color
-    df.loc[:,:] = 'background-color: #eee'
-    #overwrite values grey color
-    #index=0
-    # for v in val.loc[:,'Sales Channel']:
-    #     if v=='Offline':
-    #         df.loc[index,'Sales Channel'] = 'background-color: red'
-    #     else:
-    #         df.loc[index,'Sales Channel'] = 'background-color: green'
-    #     index = index+1
-    # index=0
-    # for v in val.loc[:,'Order Date']:
-    #     df.loc[index,'Order Date'] = 'text-align: center;color:blue'
-    #     index = index+1
-    # index=0
-    # for v in val.loc[:,'Units Sold']:
-    #     df.loc[index,'Units Sold'] = 'text-align: right'
-    #     index = index+1
-    # print style_json['Units Sold']
-    for key in style_json:
-        index=0
-        for v in val.loc[:,'Units Sold']:
-            df.loc[index,key] = style_json[key]
-            index = index+1
+    elif value == 'North America':
+        color = 'black'
+    elif value == 'Cereal':
+        color ='blue'
+    elif value =='Fruits':
+        color = 'red'
+    elif value =='Bihar':
+        color = 'purple'
+    elif value == 'AP':
+        color = 'blue'
 
-    return df   
-def getDF_test():
-    df = pd.read_csv('1k.csv')
-    style_json = {
-        "Units Sold":'text-align:right;color:red;background-color:#eee;',
-        "Order Date":'text-align:center',
-        "Other":{
-            "Offline":'background-color:red',
-            "online":'background-color:green'
-        }
-    }
-    #all_cols = ['Region', 'Country', 'Item Type','Sales Channel','Order Date','Units Sold']
-    df = df[['Region', 'Country', 'Item Type','Sales Channel','Order Date','Units Sold']].head(100)
-    all_cols = list(df.columns)
-    #s = df.style.applymap(color_negative_red) #pip install Jinja2
-    
-    # x1 = df.style.set_table_attributes('class="table table-bordered table-hover"')
-    #x = df.style.applymap(highlight_cols, subset=pd.IndexSlice[:, ['Sales Channel']]).set_properties(**{'font-size': '15px', 'font-family': 'Calibri'}).set_table_attributes('class="table table-bordered table-hover"')
-    x=df.style.apply(lambda x:apply_styles_to_dataframe(x,all_cols,style_json), axis=None)
-    x = x.set_table_attributes('class="table table-bordered table-hover"')
-    #x = df.style.set_table_attributes('class="table"')
-    print 'fdsfsdfsd----'
-    #print x.render(uuid='my_id',uuclass='table')
-    df_html = df.to_html(index=False,classes = 'table table-bordered table-hover" id = "my_id')
-    return x.hide_index().render(uuid='my_id')
-
-
-
-
-
-##########################################################################
-def apply_styles_to_dataframe(val,style_json):
-    df = val.copy()
-    df.loc[:,:] = 'background-color: #eee'
-    for key in style_json:
-        if key != 'Others':
-            index=0
-            for v in val.loc[:,key]:
-                df.loc[index,key] = style_json[key]
-                index = index+1
-        elif key == 'Others':
-            for col_name in val.loc[:,:]:
-                index=0
-                for v in val.loc[:,col_name]:
-                    for inner_key in style_json[key]:
-                        if inner_key == v:
-                            df.loc[index,col_name] = style_json[key][inner_key]
-                            index = index+1
-    return df    
+    return 'background-color: %s'  %color
 
 def getDF():
     df = pd.read_csv('1k.csv')
@@ -176,36 +50,76 @@ def getDF():
     x=df.style.apply(lambda x:apply_styles_to_dataframe(x,style_json), axis=None)
     x = x.set_table_attributes('class="table table-bordered table-hover"')
     return x.hide_index().render(uuid='my_id')
+####################################################
+def apply_styles_to_dataframe(val,style_json):
+    df = val.copy()
+    for key in style_json:
+        if key != 'Others':
+            index=0
+            for v in val.loc[:,key]:
+                df.loc[index,key] = style_json[key]
+                index = index+1
+        elif key == 'Others':
+            for col_name in val.loc[:,:]:
+                for inner_key in style_json[key]:
+                    matching_list = list(val.loc[val[col_name]==inner_key].index.values)
+                    if matching_list != []:
+                        for idx in matching_list:
+                            df.loc[idx,col_name] = style_json[key][inner_key]
+    return df  
+def getDF_temp():
+    conn = sqlite3.connect('./db.sqlite3')
+    df = pd.read_sql_query("SELECT * FROM demo_data_tbl limit 150", conn)
+    style_json = {
+        "Name": 'text-align:right;color:white;background-color:black;',
+        "Phone": 'text-align:center;color:black;background-color:#eee;',
+        "Email": 'text-align:center',
+        "Region": 'text-align:right',
+        "Others": {
+            "Bihar": 'background-color:red;color:#000;text-align:center',
+            "AP": 'background-color:green;color:#000;',
+            "UP": 'background-color:#efef44;color:#000;text-align:right'
+        }
+    }    
+    x=df.style.apply(lambda x:apply_styles_to_dataframe(x,style_json), axis=None)
+    #x = df.style.applymap(color_negative_red, subset=['Region'])
+    x = x.set_table_attributes('class="table table-bordered table-hover"')
+    return x.hide_index().render(uuid='my_id')
+
+@csrf_exempt
+def __pagination(request):
+    # draw = request.POST['draw']
+    start = int(request.POST['start'])
+    length = int(request.POST['length'])
+    print start
+    print length
+    search_val = str(request.POST['search[value]'])
+    print search_val
+    # if not len(search_val):
+    #     search_val = '%'
+    # else:  search_val = '%'+str(search_val)+'%'
+    data = db_select("SELECT * FROM demo_data_tbl limit '"+str(length)+"' offset '"+str(start)+"'")
+    filtered_count = len(data)
+    #print data
+    return HttpResponse(json.dumps({
+        #"draw": draw,
+        "recordsTotal": 200,
+        "recordsFiltered": 200,
+        "data": data,
+            }))
 
 def test(request):
-    bytes = getDF().encode('utf-8')
+    bytes = getDF_temp().encode('utf-8')
     return HttpResponse(bytes, content_type='application/json')
 
-'''
-$.ajax({
-    url: '/test/',
-    dataType: 'html',
-    success: function (response) {
-        $('#testDiv').html(response);
-            $('#T_my_id').DataTable()
-        }
-});
-'''
-########################################################################################
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+def db_select(query):
+    conn = sqlite3.connect('./db.sqlite3')
+    cursor = conn.cursor()
+    cursor.execute(query)
+    data = cursor.fetchall()
+    cursor.close()
+    return data
+#####################################
 
 def home(request):
     # db_operation()
@@ -305,3 +219,5 @@ def comment_remove(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
     comment.delete()
     return redirect('post_detail', pk=comment.post.pk)
+
+
