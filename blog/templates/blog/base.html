@@ -103,7 +103,7 @@
 <body ng-app="app" ng-controller="mainController"
     style="padding-left: 0px;padding-right:0px;padding-top:0px;background-color: #fff">
     <ul>
-        <li><a class="active" href="/"><strong>[[vms.model.msg]]</strong></a></li>
+        <li><a class="active" href="/"><img src="http://www.industrialair.com.au/wp-content/uploads/2017/02/IA-White.png" height="20px" width="20px"><strong>&nbsp; [[vms.model.msg]]</strong></a></li>
         {% if user.is_authenticated %}
         <li style="float:right"><a href="{% url 'logout' %}">Log out</a> </li>
         <li style="float:right"><a href="{% url 'post_new' %}"><span class="glyphicon glyphicon-plus"></span></a></li>
