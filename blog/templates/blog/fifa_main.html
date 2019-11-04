@@ -29,7 +29,7 @@
 </div>
 <script src="/static/BGD_adm3.js"> </script>
 <script>
-    
+
     var map = L.map('map').setView([23.946096, 90.128173], 7);
 
     L.tileLayer('http://{s}.tile.cloudmade.com/{key}/{styleId}/256/{z}/{x}/{y}.png', {
@@ -45,9 +45,27 @@
             color: 'white',
             dashArray: '3',
             fillOpacity: 0.7,
-            fillColor: '#9accfe'
+            fillColor: getColor(feature.properties.ID_3)
+            //fillColor: getColor(feature.properties.NAME_3)
         };
     }
+    function getColor(s) {
+        if(s==286) return 'black'
+        else if(s==282) return '#bf3f54'
+        else if(s==283) return '#b34fdf'
+        else if(s==284) return '#cf3f5e'
+        else if(s==285) return '#ef3a54'
+        else if(s==286) return '#ff3f54'
+        else if(s==287) return '#fa3faa'
+        else return '#167008'
+        // if(s=='Kushtia S.') return 'black'
+        // else if(s=='Mirpur') return '#bf3f54'
+        // else if(s=='Bheramara') return '#bfffdf'
+        // else if(s=='Khoksa') return '#cf3f5e'
+        // else if(s=='Kumarkhali') return '#ef3a54'
+        // else return '#167008'
+    }
+    
     function onEachFeature(feature, layer) {
         layer.on({
             mouseover: highlightFeature,
