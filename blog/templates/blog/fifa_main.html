@@ -38,6 +38,25 @@
         styleId: 22677
     }).addTo(map);
 
+    // control that shows state info on hover
+    var info = L.control();
+
+    info.onAdd = function (map) {
+        this._div = L.DomUtil.create('div', 'info');
+        this.update();
+        return this._div;
+    };
+
+    info.update = function (props) {
+        this._div.innerHTML = '<h3>Sample Distribution</h3>' + (props ?
+            '<br /><b>'+'Division -> ' + props.NAME_1 + ' </b> '+
+            '<br /><b>'+'District -> ' + props.NAME_2 + ' </b> '+
+            '<br /><b>'+'Upazila -> ' + props.NAME_3 + ' </b> '
+            : 'Hover over a Upazila');
+    };
+
+    info.addTo(map);
+
     function style(feature) {
         return {
             weight: 1,
@@ -50,13 +69,13 @@
         };
     }
     function getColor(s) {
-        if(s==286) return 'black'
-        else if(s==282) return '#bf3f54'
-        else if(s==283) return '#b34fdf'
-        else if(s==284) return '#cf3f5e'
-        else if(s==285) return '#ef3a54'
-        else if(s==286) return '#ff3f54'
-        else if(s==287) return '#fa3faa'
+        if (s == 286) return 'black'
+        else if (s == 282) return '#bf3f54'
+        else if (s == 283) return '#b34fdf'
+        else if (s == 284) return '#cf3f5e'
+        else if (s == 285) return '#ef3a54'
+        else if (s == 286) return '#ff3f54'
+        else if (s == 287) return '#fa3faa'
         else return '#167008'
         // if(s=='Kushtia S.') return 'black'
         // else if(s=='Mirpur') return '#bf3f54'
@@ -65,7 +84,7 @@
         // else if(s=='Kumarkhali') return '#ef3a54'
         // else return '#167008'
     }
-    
+
     function onEachFeature(feature, layer) {
         layer.on({
             mouseover: highlightFeature,
@@ -77,19 +96,19 @@
         var layer = e.target;
         layer.setStyle({
             weight: 1,
-            color: '#666',
+            color: '#000000',
             dashArray: '',
             fillOpacity: 0.7,
         });
         if (!L.Browser.ie && !L.Browser.opera) {
             layer.bringToFront();
         }
-        //info.update(layer.feature.properties);
+        info.update(layer.feature.properties);
     }
     var geojson;
     function resetHighlight(e) {
         geojson.resetStyle(e.target);
-        //info.update();
+        info.update();
     }
     function zoomToFeature(e) {
         map.fitBounds(e.target.getBounds());
