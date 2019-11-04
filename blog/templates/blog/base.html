@@ -34,6 +34,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ng-table/1.0.0/ng-table.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ng-table/1.0.0/ng-table.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.35.3/js/bootstrap-dialog.min.js"></script>
+    <!---->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+        integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+        crossorigin=""></script>
+    <!---->
     <script>
         var app = angular.module('app', ["ngTable"]);
         app.config(function ($interpolateProvider) {
@@ -89,9 +97,11 @@
             });
         }
     </script>
+
 </head>
 
-<body ng-app="app" ng-controller="mainController" style="padding-left: 0px;padding-right:0px;padding-top:0px;background-color: #fff">
+<body ng-app="app" ng-controller="mainController"
+    style="padding-left: 0px;padding-right:0px;padding-top:0px;background-color: #fff">
     <ul>
         <li><a class="active" href="/"><strong>[[vms.model.msg]]</strong></a></li>
         {% if user.is_authenticated %}
@@ -122,7 +132,6 @@
                     [[user.age]]</td>
             </tr>
         </table> -->
-
     </div>
 
 </body>
@@ -133,7 +142,6 @@
     /* body {
         background-image: url("https://wallpapercave.com/wp/tekM38P.jpg");
     } */
-
     ul {
         list-style-type: none;
         margin: 0;
