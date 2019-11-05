@@ -64,267 +64,270 @@
     </center> -->
 </div>
 <style>
-        .itag {
-            width: 18px;
-            height: 18px;
-            float: left;
-            margin-right: 8px;
-            opacity: 0.7;
-        }
-    
-        /* #map {
+    .itag {
+        width: 18px;
+        height: 18px;
+        float: left;
+        margin-right: 8px;
+        opacity: 0.7;
+    }
+
+    /* #map {
             width: 780px;
             height: 650px;
             margin-left: -20px;
         } */
-    
-        .info {
-            padding: 6px 8px;
-            font: 14px/16px Arial, Helvetica, sans-serif;
-            background: white;
-            background: rgba(255, 255, 255, 0.8);
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-            border-radius: 5px;
-        }
-    
-        /* .info h4 {
+
+    .info {
+        padding: 6px 8px;
+        font: 14px/16px Arial, Helvetica, sans-serif;
+        background: white;
+        background: rgba(255, 255, 255, 0.8);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        border-radius: 5px;
+    }
+
+    /* .info h4 {
             margin: 0 0 5px;
             color: #777;
         } */
-    
-        .legend {
-            text-align: left;
-            line-height: 18px;
-            color: #555;
-        }
-    
-        /* .legend i {
+
+    .legend {
+        text-align: left;
+        line-height: 18px;
+        color: #555;
+    }
+
+    /* .legend i {
             width: 18px;
             height: 18px;
             float: left;
             margin-right: 8px;
             opacity: 1;
         } */
-    </style>
-    <!--MY Code S-->
-    <script src="/static/BGD_adm3.js"> </script>
-    <script>
-    
-        var map = L.map('map').setView([23.946096, 90.128173], 7);
-    
-        L.tileLayer('http://{s}.tile.cloudmade.com/{key}/{styleId}/256/{z}/{x}/{y}.png', {
-            attribution: 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade',
-            key: 'BC9A493B41014CAABB98F0471D759707',
-            styleId: 22677
-        }).addTo(map);
-    
-        // control that shows state info on hover
-        var info = L.control();
-    
-        info.onAdd = function (map) {
-            this._div = L.DomUtil.create('div', 'info');
-            this.update();
-            return this._div;
+</style>
+<!--MY Code S-->
+<script src="/static/BGD_adm3.js"> </script>
+<script>
+
+    var map = L.map('map').setView([23.946096, 90.128173], 7);
+
+    L.tileLayer('http://{s}.tile.cloudmade.com/{key}/{styleId}/256/{z}/{x}/{y}.png', {
+        attribution: 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade',
+        key: 'BC9A493B41014CAABB98F0471D759707',
+        styleId: 22677
+    }).addTo(map);
+
+    // control that shows state info on hover
+    var info = L.control();
+
+    info.onAdd = function (map) {
+        this._div = L.DomUtil.create('div', 'info');
+        this.update();
+        return this._div;
+    };
+
+    info.update = function (props) {
+        this._div.innerHTML = '<h3>Sample Distribution</h3>' + (props ?
+            '<br /><b>' + 'Division -> ' + props.NAME_1 + ' </b> ' +
+            '<br /><b>' + 'District -> ' + props.NAME_2 + ' </b> ' +
+            '<br /><b>' + 'Upazila -> ' + props.NAME_3 + ' </b> '
+            : 'Hover over a Upazila');
+    };
+
+    info.addTo(map);
+
+    function style(feature) {
+        return {
+            weight: 1,
+            opacity: 1,
+            color: 'white',
+            dashArray: '3',
+            fillOpacity: 0.7,
+            fillColor: getColor(feature.properties.ID_3)
+            //fillColor: getColor(feature.properties.NAME_3)
         };
-    
-        info.update = function (props) {
-            this._div.innerHTML = '<h3>Sample Distribution</h3>' + (props ?
-                '<br /><b>' + 'Division -> ' + props.NAME_1 + ' </b> ' +
-                '<br /><b>' + 'District -> ' + props.NAME_2 + ' </b> ' +
-                '<br /><b>' + 'Upazila -> ' + props.NAME_3 + ' </b> '
-                : 'Hover over a Upazila');
-        };
-    
-        info.addTo(map);
-    
-        function style(feature) {
-            return {
-                weight: 1,
-                opacity: 1,
-                color: 'white',
-                dashArray: '3',
-                fillOpacity: 0.7,
-                fillColor: getColor(feature.properties.ID_3)
-                //fillColor: getColor(feature.properties.NAME_3)
-            };
-        }
-        // function gc(perc) {
-        //     var r, g, b = 0;
-        //     if (perc < 50) {
-        //         r = 255;
-        //         g = Math.round(5.1 * perc);
-        //     }
-        //     else {
-        //         g = 255;
-        //         r = Math.round(510 - 5.10 * perc);
-        //     }
-        //     var h = r * 0x10000 + g * 0x100 + b * 0x1;
-        //     return '#' + ('000000' + h.toString(16)).slice(-6);
-        // }
-        // var green_to_red = [
-        // {key : 0,background: '#0dff00'},
-        // {key :  5,background: '#63b682'},
-        // {key :  10,background: '#73b87e'},
-        // {key :  15,background: '#84bb7b'},
-        // {key :  20,background: '#94bd77'},
-        // {key :  25,background: '#a4c073'},
-        // {key :  30,background: '#b0be6e'},
-        // {key :  35,background: '#c4c56d'},
-        // {key :  40,background: '#d4c86a'},
-        // {key :  45,background: '#e2c965'},
-        // {key :  50,background: '#f5ce62'},
-        // {key :  55,background: '#f3c563'},
-        // {key :  60,background: '#e9b861'},
-        // {key :  65,background: '#e6ad61'},
-        // {key :  70,background: '#ecac67'},
-        // {key :  75,background: '#e9a268'},
-        // {key :  80,background: '#e79a69'},
-        // {key :  85,background: '#e5926b'},
-        // {key :  90,background: '#e2886c'},
-        // {key :  95,background: '#e0816d'},
-        // {key : 100,background: '#ff1100'}
-        // ]
-        var green_to_red = [
-    
-            //{ key: 0, background: '#2d6063' },
-            { key: 10, background: 'green' },
-            { key: 20, background: '#91ff00' },
-            { key: 30, background: '#aaff00' },
-            { key: 40, background: '#d4ff00' },
-            { key: 50, background: '#ffc400' },
-            { key: 60, background: '#ffa200' },
-            { key: 70, background: '#ff8400' },
-            { key: 80, background: '#ff5e00' },
-            { key: 90, background: 'red' },
-            { key: 100, background: '#c91b00' }
-        ]
-    
-        const gc = (pt) => {
-            for (i = 0; i < green_to_red.length; i++) {
-                if (green_to_red[i].key == pt) {
-                    return green_to_red[i].background
-                }
+    }
+    // function gc(perc) {
+    //     var r, g, b = 0;
+    //     if (perc < 50) {
+    //         r = 255;
+    //         g = Math.round(5.1 * perc);
+    //     }
+    //     else {
+    //         g = 255;
+    //         r = Math.round(510 - 5.10 * perc);
+    //     }
+    //     var h = r * 0x10000 + g * 0x100 + b * 0x1;
+    //     return '#' + ('000000' + h.toString(16)).slice(-6);
+    // }
+    // var green_to_red = [
+    // {key : 0,background: '#0dff00'},
+    // {key :  5,background: '#63b682'},
+    // {key :  10,background: '#73b87e'},
+    // {key :  15,background: '#84bb7b'},
+    // {key :  20,background: '#94bd77'},
+    // {key :  25,background: '#a4c073'},
+    // {key :  30,background: '#b0be6e'},
+    // {key :  35,background: '#c4c56d'},
+    // {key :  40,background: '#d4c86a'},
+    // {key :  45,background: '#e2c965'},
+    // {key :  50,background: '#f5ce62'},
+    // {key :  55,background: '#f3c563'},
+    // {key :  60,background: '#e9b861'},
+    // {key :  65,background: '#e6ad61'},
+    // {key :  70,background: '#ecac67'},
+    // {key :  75,background: '#e9a268'},
+    // {key :  80,background: '#e79a69'},
+    // {key :  85,background: '#e5926b'},
+    // {key :  90,background: '#e2886c'},
+    // {key :  95,background: '#e0816d'},
+    // {key : 100,background: '#ff1100'}
+    // ]
+    var green_to_red = [
+
+        //{ key: 0, background: '#2d6063' },
+        { key: 10, background: 'green' },
+        { key: 20, background: '#91ff00' },
+        { key: 30, background: '#aaff00' },
+        { key: 40, background: '#d4ff00' },
+        { key: 50, background: '#ffc400' },
+        { key: 60, background: '#ffa200' },
+        { key: 70, background: '#ff8400' },
+        { key: 80, background: '#ff5e00' },
+        { key: 90, background: 'red' },
+        { key: 100, background: '#c91b00' }
+    ]
+
+    const gc = (pt) => {
+        for (i = 0; i < green_to_red.length; i++) {
+            if (green_to_red[i].key == pt) {
+                return green_to_red[i].background
             }
         }
-        function getColor(s) {
-            if (s == 286) return gc(70)
-            else if (s == 282) return gc(90)
-            else if (s == 283) return gc(100)
-            else if (s == 284) return gc(50)
-            else if (s == 285) return gc(60)
-            else if (s == 286) return gc(90)
-            else if (s == 287) return gc(80)
-            else if (s == 223) return gc(40)
-            else if (s == 221) return gc(30)
-            else if (s == 138) return gc(20)
-            else if (s == 135) return gc(10)
-            // else if (s == 133) return gc(10)
-            else return '#275c29'
-            // if (s == 286) return 'black'
-            // else if (s == 282) return '#bf3f54'
-            // else if (s == 283) return '#b34fdf'
-            // else if (s == 284) return '#cf3f5e'
-            // else if (s == 285) return '#ef3a54'
-            // else if (s == 286) return '#ff3f54'
-            // else if (s == 287) return '#fa3faa'
-            // else return '#167008'
-            // if(s=='Kushtia S.') return 'black'
-            // else if(s=='Mirpur') return '#bf3f54'
-            // else if(s=='Bheramara') return '#bfffdf'
-            // else if(s=='Khoksa') return '#cf3f5e'
-            // else if(s=='Kumarkhali') return '#ef3a54'
-            // else return '#167008'
+    }
+    function getColor(s) {
+        if (s == 286) return gc(70)
+        else if (s == 282) return gc(90)
+        else if (s == 283) return gc(100)
+        else if (s == 284) return gc(50)
+        else if (s == 285) return gc(60)
+        else if (s == 286) return gc(90)
+        else if (s == 287) return gc(80)
+        else if (s == 223) return gc(40)
+        else if (s == 221) return gc(30)
+        else if (s == 138) return gc(20)
+        else if (s == 135) return gc(10)
+        // else if (s == 133) return gc(10)
+        else return '#275c29'
+        // if (s == 286) return 'black'
+        // else if (s == 282) return '#bf3f54'
+        // else if (s == 283) return '#b34fdf'
+        // else if (s == 284) return '#cf3f5e'
+        // else if (s == 285) return '#ef3a54'
+        // else if (s == 286) return '#ff3f54'
+        // else if (s == 287) return '#fa3faa'
+        // else return '#167008'
+        // if(s=='Kushtia S.') return 'black'
+        // else if(s=='Mirpur') return '#bf3f54'
+        // else if(s=='Bheramara') return '#bfffdf'
+        // else if(s=='Khoksa') return '#cf3f5e'
+        // else if(s=='Kumarkhali') return '#ef3a54'
+        // else return '#167008'
+    }
+
+    function onEachFeature(feature, layer) {
+        layer.on({
+            mouseover: highlightFeature,
+            mouseout: resetHighlight,
+            click: zoomToFeature
+        });
+    }
+    function highlightFeature(e) {
+        var layer = e.target;
+        layer.setStyle({
+            weight: 1,
+            color: '#000000',
+            dashArray: '',
+            fillOpacity: 0.7,
+        });
+        if (!L.Browser.ie && !L.Browser.opera) {
+            layer.bringToFront();
         }
-    
-        function onEachFeature(feature, layer) {
-            layer.on({
-                mouseover: highlightFeature,
-                mouseout: resetHighlight,
-                click: zoomToFeature
-            });
+        info.update(layer.feature.properties);
+    }
+    var geojson;
+    function resetHighlight(e) {
+        geojson.resetStyle(e.target);
+        info.update();
+    }
+    function zoomToFeature(e) {
+        map.fitBounds(e.target.getBounds());
+    }
+    geojson = L.geoJSON(json_upazilla, {
+        style: style,
+        onEachFeature: onEachFeature
+    }).addTo(map);
+
+    var countList = [22, 123, 234, 12, 03, 456, 555, 22, 1223, 124, 456, 223, 347, 324, 345, 63, 21, 12, 66, 99, 199, 89, 189]
+    var min = Math.min.apply(null, countList)
+    var max = Math.max.apply(null, countList)
+
+    var diff = max - min;
+    var rem = Math.ceil(diff / 10);
+    let new_min = min
+    let range = [];
+    for (let i = 0; i < 10; i++) {
+        if (new_min + rem > max) range.push((new_min + 1) + '-' + max)
+        else {
+            if (min != 0 && i == 0) range.push((new_min) + '-' + (new_min + rem))
+            else range.push((new_min + 1) + '-' + (new_min + rem))
         }
-        function highlightFeature(e) {
-            var layer = e.target;
-            layer.setStyle({
-                weight: 1,
-                color: '#000000',
-                dashArray: '',
-                fillOpacity: 0.7,
-            });
-            if (!L.Browser.ie && !L.Browser.opera) {
-                layer.bringToFront();
-            }
-            info.update(layer.feature.properties);
-        }
-        var geojson;
-        function resetHighlight(e) {
-            geojson.resetStyle(e.target);
-            info.update();
-        }
-        function zoomToFeature(e) {
-            map.fitBounds(e.target.getBounds());
-        }
-        geojson = L.geoJSON(json_upazilla, {
-            style: style,
-            onEachFeature: onEachFeature
-        }).addTo(map);
-    
-        var countList = [22, 123, 234, 12,0,456, 555, 22,1223, 124, 456, 223, 347, 324, 345, 63, 21, 12, 66, 99, 199, 89, 189]
-        var min = Math.min.apply(null, countList)
-        var max = Math.max.apply(null, countList)
-    
-        var diff = max - min;
-        var rem = Math.ceil(diff / 10);
-        let new_min = min
-        let range = [];
-        for (let i = 0; i < 10; i++) {
-            if (new_min + rem > max) range.push((new_min+1) + '-' + max)
-            else range.push((new_min+1) + '-' + (new_min + rem))
-            new_min = new_min + rem
-        }
-        console.log(range)
-        console.log(min)
-        console.log(max)
-        console.log(rem)
-        var legend = L.control({ position: 'bottomleft' });
-    
-        legend.onAdd = function (map) {
-    
-            var div = L.DomUtil.create('div', 'info legend')
-            var labels = [];
+        new_min = new_min + rem
+    }
+    console.log(range)
+    console.log(min)
+    console.log(max)
+    console.log(rem)
+    var legend = L.control({ position: 'bottomleft' });
+
+    legend.onAdd = function (map) {
+
+        var div = L.DomUtil.create('div', 'info legend')
+        var labels = [];
+        labels.push(
+            '<i class="itag" style="background:#275c29"></i> ' +
+            0 + '</br>');
+        for (var i = 0; i < range.length; i++) {
             labels.push(
-                    '<i class="itag" style="background:#275c29"></i> ' +
-                    0+'</br>');
-            for (var i = 0; i < range.length; i++) {
-                labels.push(
-                    '<i class="itag" style="background:' + green_to_red[i].background + '"></i> ' +
-                    range[i]+'</br>');
-            }
-    
-            div.innerHTML = labels.join('<br>');
-            return div;
-        };
-        legend.addTo(map);
-        // var ll = 23.83644294738781
-        // var lg = 88.86476898193371
-        var ll = 23.8907
-        var lg = 89.1099
-        // setInterval(function () {
-        //     map.setZoom(7);
-        //     setTimeout(function () {
-        //         //var marker = L.marker([23.8907, 89.1099], {}).addTo(map);
-        //         //map.flyTo([23.8907, 89.1099], 11);
-        //         var marker = L.marker([ll, lg], {}).addTo(map);
-        //         map.flyTo([ll,lg], 10);
-    
-        //     }, 1000);
-        // }, 5000)
-        setTimeout(function () {
-            var marker = L.marker([ll, lg], {}).addTo(map);
-            map.flyTo([ll, lg], 10.5);
-        }, 1000);
-    
-    </script>
+                '<i class="itag" style="background:' + green_to_red[i].background + '"></i> ' +
+                range[i] + '</br>');
+        }
+
+        div.innerHTML = labels.join('<br>');
+        return div;
+    };
+    legend.addTo(map);
+    // var ll = 23.83644294738781
+    // var lg = 88.86476898193371
+    var ll = 23.8907
+    var lg = 89.1099
+    // setInterval(function () {
+    //     map.setZoom(7);
+    //     setTimeout(function () {
+    //         //var marker = L.marker([23.8907, 89.1099], {}).addTo(map);
+    //         //map.flyTo([23.8907, 89.1099], 11);
+    //         var marker = L.marker([ll, lg], {}).addTo(map);
+    //         map.flyTo([ll,lg], 10);
+
+    //     }, 1000);
+    // }, 5000)
+    setTimeout(function () {
+        var marker = L.marker([ll, lg], {}).addTo(map);
+        map.flyTo([ll, lg], 10.5);
+    }, 1000);
+
+</script>
 <!-- <script>
 
     var map = L.map('map').setView([23.946096, 90.128173], 7);
