@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import (HttpResponseRedirect, HttpResponse)
 from django.views.decorators.csrf import csrf_exempt
 
-import numpy as np
+#import numpy as np
 import pandas as pd
 import json
 import sqlite3
@@ -91,10 +91,10 @@ def __pagination(request):
     # draw = request.POST['draw']
     start = int(request.POST['start'])
     length = int(request.POST['length'])
-    print start
-    print length
+    #print start
+    #print length
     search_val = str(request.POST['search[value]'])
-    print search_val
+    #print search_val
     # if not len(search_val):
     #     search_val = '%'
     # else:  search_val = '%'+str(search_val)+'%'
