@@ -483,16 +483,24 @@
     }
     $(document).ready(function () {
         //
+
         $.ajax({
             url: '/test/',
             dataType: 'html',
             success: function (response) {
                 $('#testDiv').html(response);
-                $('#T_my_id').DataTable();
+                $('#T_my_id').DataTable({
+                    "fixedHeader": {
+                        header: true,
+                    },
+                });
             }
         });
         $('#dt_test').DataTable(
             {
+                "fixedHeader": {
+                        header: true,
+                    },
                 "retrieve": true,
                 "processing": true,
                 "serverSide": true,
@@ -626,5 +634,6 @@
         ["Unity Butler", "Marketing Designer", "San Francisco", "5384", "2009/12/09", "$85,675"]
     ];
 </script>
+
 
 {% endblock content %}
